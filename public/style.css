@@ -96,12 +96,19 @@ header{
       position: absolute;
       bottom:0;
       left:0;
-      padding:10px;
+      padding:40px;
       max-width: 600px;
       color:white;
       z-index: 2;
   }
-
+  .title-destaque-descricao h2{
+    font-size: 64px;
+    margin: 20px 0;
+  }
+.title-destaque-descricao p {
+    font-weight: lighter;
+    font-size: 16px;
+}
   .overlay-destaque{
       position: absolute;
       left:0;
@@ -112,3 +119,60 @@ header{
       background-color:rgba(0,0,0,0.4);
       z-index: 1;
   }
+
+.outras-noticias{
+    background-color: #fff;
+    padding: 30px 20px;
+    text-align: center;
+}
+.outras-noticias h2{
+    font-size: 54px;
+}
+.ultimas{
+    width: 70%;
+    padding: 0 30px;
+    display: flex;
+}
+.box-ultima-single{
+    text-align: left;
+    width: 49%;
+    margin-right: 1%;
+    background-color: #fff;
+    padding-bottom: 20px;
+    height: 100%;
+    border-radius: 10px;
+
+}
+.box-ultima-single img{
+    width: 100%;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+.box-ultima-single h3{
+    font-size: 16px;
+    color: #3F51B5;
+    margin: 20px 0;
+}
+.box-ultima-single h2{
+    color: #303030;
+    font-size: 28px !important;
+}
+.box-ultima-single p{
+    color: #7B8591;
+    font-size: 16px;
+    margin: 20px 0;
+}
+.conteudo-noticia-single{
+    padding: 20px;
+}
+.mais-lidas{
+    width: 30%;
+}
+.mais-lidas h3{
+    background-color: #3F51B5;
+    color: #fff;
+    text-align: center;
+    padding: 10px 8px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
