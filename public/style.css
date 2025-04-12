@@ -247,6 +247,7 @@ header{
   }
 
   .texto-mais-lida-single p{
+      max-height: 4.5em;
       color:#7B8591;
       font-size:14px;
   }

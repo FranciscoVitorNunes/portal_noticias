@@ -58,7 +58,15 @@ app.get('/', async (req, res) => {
             res.status(500).send("Erro ao buscar posts");
         }
     } else {
-        res.render('busca', {});
+        try{
+            const buscaPosts = await Posts.find({titulo: {$regex: req.query.busca, $options:"i"}});
+            console.log(buscaPosts);
+            res.render('busca', {posts: buscaPosts, contagem:buscaPosts.length});
+        
+    } catch (err){
+        console.log(err);
+    }
+
     }
 });
 
