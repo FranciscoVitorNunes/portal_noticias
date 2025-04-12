@@ -29,11 +29,32 @@ app.set('views', path.join(__dirname, '/pages'));
 app.get('/', async (req, res) => {
     if (!req.query.busca) {
         try {
-            const posts = await Posts.find({}).sort({ _id: -1 });
-            console.log(posts[0]);
-            res.render('home', { posts });
+            const postsDB = await Posts.find({}).sort({ _id: -1 });
+            const posts = postsDB.map(function(val){
+                return {
+                    titulo: val.titulo,
+                    conteudo: val.conteudo,
+                    descricaoCurta: val.conteudo.substring(0, 10),
+                    imagem: val.imagem,
+                    slug: val.slug,
+                    categoria: val.categoria
+                }
+            });
+            const postsTopList = await Posts.find({}).sort({ 'views': -1 }).limit(3);
+            const postsTop = postsTopList.map(function(val){
+                return {
+                    titulo: val.titulo,
+                    conteudo: val.conteudo,
+                    descricaoCurta: val.conteudo.substring(0, 10),
+                    imagem: val.imagem,
+                    slug: val.slug,
+                    categoria: val.categoria,
+                    views: val.views
+                }
+            });
+            res.render('home', { posts: posts, postsTop: postsTop });
         } catch (err) {
-            console.error(err);
+            console.log(err);
             res.status(500).send("Erro ao buscar posts");
         }
     } else {
@@ -42,10 +63,34 @@ app.get('/', async (req, res) => {
 });
 
 
-app.get('/:slug',(req,res)=>{
-    //res.send(req.params.slug);
-    res.render('single',{});
-})
+app.get('/:slug', async (req, res) => {
+    try {
+        const resposta = await Posts.findOneAndUpdate(
+            { slug: req.params.slug },
+            { $inc: { views: 1 } },
+            { new: true }
+        );
+
+        const postsTopList = await Posts.find({}).sort({ 'views': -1 }).limit(3);
+        const postsTop = postsTopList.map(function(val){
+            return {
+                titulo: val.titulo,
+                conteudo: val.conteudo,
+                descricaoCurta: val.conteudo.substring(0, 10),
+                imagem: val.imagem,
+                slug: val.slug,
+                categoria: val.categoria,
+                views: val.views
+            }
+        });
+
+        res.render('single', {
+            noticia: resposta, postsTop: postsTop
+        });
+    } catch (err) {
+        res.redirect('/');
+    }
+});
 
 
 
