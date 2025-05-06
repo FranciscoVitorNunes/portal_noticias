@@ -102,13 +102,27 @@ app.get('/:slug', async (req, res) => {
     }
 });
 
+const usuarios = [
+    { usuario: "vitor", senha: "12345678" }
+]
+app.post('/admin/login', (req, res) => {
+    const { login, senha } = req.body;
+    const user = usuarios.find(u => u.usuario === login && u.senha === senha);
+
+    if (user) {
+        req.session.login = user.usuario;
+        return res.redirect('/admin/login');
+    } else {
+        return res.send('Login inválido');
+    }
+});
+
 app.get('/admin/login', async(req,res)=>{
     if(req.session.login== null) {
-        req.session.login = "Vitor";
-        res.send("Sua sessão foi criada!");
+        res.render('admin-login');
     } 
     else{
-        res.send(req.session.login);
+        res.render('admin-painel');
     }
 });
 
