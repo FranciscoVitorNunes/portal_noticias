@@ -7,6 +7,8 @@ const path = require('path');
 
 const app = express();
 
+const session = require('express-session')
+
 const Posts = require('./Posts.js');
 
 mongoose.connect('mongodb+srv://franvinu:Vito5757!@cluster0.nk6o00b.mongodb.net/portal_news?retryWrites=true&w=majority&appName=Cluster0', {useNewUrlParser: true, useUnifiedTopology: true}).then(function(){
@@ -24,7 +26,7 @@ app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 app.use('/public', express.static(path.join(__dirname, 'public')));
 app.set('views', path.join(__dirname, '/pages'));
-
+app.use(session({secret:'dg236d623d63',cookie:{mxAge:60000}}));
 
 app.get('/', async (req, res) => {
     if (!req.query.busca) {
@@ -100,7 +102,15 @@ app.get('/:slug', async (req, res) => {
     }
 });
 
-
+app.get('/admin/login', async(req,res)=>{
+    if(req.session.login== null) {
+        req.session.login = "Vitor";
+        res.send("Sua sessão foi criada!");
+    } 
+    else{
+        res.send(req.session.login);
+    }
+});
 
 app.listen(5000,()=>{
     console.log('server rodando!');

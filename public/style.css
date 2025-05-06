@@ -267,7 +267,8 @@ header{
   }
 
   footer{
-      
+      position: fixed;
+      bottom: 0;
       background-color: #0aacdc;
       text-align: center;
       color:white;
