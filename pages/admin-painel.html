@@ -15,15 +15,25 @@
 }
 
 .container {
-  max-width: 600px;
-  margin: 50px auto;
+  max-width: 63vw;
+  margin: 10px 0 0 800px;
   background-color: #34495e;
   padding: 30px;
   border-radius: 10px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
   animation: fadeInUp 0.8s ease-out;
 }
-
+.cad{
+  position: fixed;
+  max-width: 600px;
+  width: 30vw;
+  margin: 10px auto;
+  background-color: #34495e;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  animation: fadeInUp 0.8s ease-out;
+}
 h1 {
   text-align: center;
   margin-bottom: 20px;
@@ -53,7 +63,7 @@ textarea {
   min-height: 120px;
 }
 
-button {
+a, button {
   margin-top: 20px;
   background-color: #1abc9c;
   color: white;
@@ -65,11 +75,11 @@ button {
   transition: background 0.3s ease;
 }
 
-button:hover {
+a:hover, button:hover {
   background-color: #16a085;
 }
 
-button i {
+a i,button i {
   margin-right: 8px;
 }
 
@@ -157,7 +167,7 @@ button i {
   </style>
 </head>
 <body>
-  <div class="container">
+  <div class="cad">
     <h1><i class="fas fa-pen-nib"></i> Criar Nova Notícia</h1>
     <form id="postForm" method="post" action="/admin/cadastrar">
       <label for="titulo">Título da Notícia</label>
@@ -185,7 +195,7 @@ button i {
     <div class="container" id="noticiasContainer">
         <h1><i class="fas fa-newspaper"></i> Notícias Publicadas</h1>
 
-            <% for(let i = 1; i< posts.length; i++){ %>
+            <% for(let i = 0; i< posts.length; i++){ %>
             <div class="noticia" id="exemploNoticia">
                 <h2 class="noticia-titulo"><%= posts[i].titulo %></h2>
                 <img class="noticia-imagem" src="<%= posts[i].imagem %>" alt="Imagem da notícia" />

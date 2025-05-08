@@ -103,7 +103,7 @@ app.get('/:slug', async (req, res) => {
 });
 
 const usuarios = [
-    { usuario: "vitor", senha: "12345678" }
+    { usuario: "vitor", senha: "1" }
 ]
 app.post('/admin/login', (req, res) => {
     const { login, senha } = req.body;
@@ -128,7 +128,7 @@ app.post('/admin/cadastrar',(req,res)=>{
     })
     res.redirect('/admin/login');
 })
-app.post('/admin/excluir/:id',(req,res)=>{
+app.get('/admin/excluir/:id',(req,res)=>{
     Posts.deleteOne({_id:req.params.id}).then(()=>{
         res.redirect('/admin/login');
     })
@@ -150,7 +150,7 @@ app.get('/admin/login', async(req,res)=>{
     } 
     else{
         try {
-            const postsDB = await Posts.find({}).sort({ _id: 0 });
+            const postsDB = await Posts.find({}).sort({ _id: -1 });
             const posts = postsDB.map(function(val){
                 return {
                     id: val._id,
