@@ -1,8 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
-
-var bodyParser = require('body-parser')
-
+const fileupload = require('express-fileupload');
+var bodyParser = require('body-parser');
+const fs = require('fs');
 const path = require('path');
 
 const app = express();
@@ -16,7 +16,10 @@ mongoose.connect('mongodb+srv://franvinu:Vito5757!@cluster0.nk6o00b.mongodb.net/
 }).catch(function(err){
     console.log("fala na conexão!!!");
 })
-
+app.use(fileupload({
+    useTempFile: true,
+    tempFileDir: path.join(__dirname,'temp')
+}))
 app.use( bodyParser.json() );       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
   extended: true
@@ -117,9 +120,18 @@ app.post('/admin/login', (req, res) => {
     }
 });
 app.post('/admin/cadastrar',(req,res)=>{
+
+    let formato = req.files.files.name.split('.');
+    var imagem='';
+    if(formato[formato.length -1 ]=='jpg'){
+        imagem=new Date().getTime()+'.jpg'
+        req.files.files.mv(__dirname+'/public/images'+imagem);
+    }else{
+        fs.unlinkSync(req.files.files.tempFilePath);
+    }
     Posts.create({
         titulo: req.body.titulo,
-        imagem: req.body.imagem,
+        imagem: 'http://localhost:5000/public/images'+imagem,
         categoria: req.body.categoria,
         conteudo: req.body.conteudo,
         slug: req.body.slug,

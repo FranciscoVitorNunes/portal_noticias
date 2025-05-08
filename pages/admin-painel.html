@@ -169,12 +169,13 @@ a i,button i {
 <body>
   <div class="cad">
     <h1><i class="fas fa-pen-nib"></i> Criar Nova Notícia</h1>
-    <form id="postForm" method="post" action="/admin/cadastrar">
+    <form id="postForm" method="post" enctype="multipart/form-data" action="/admin/cadastrar">
       <label for="titulo">Título da Notícia</label>
       <input type="text" id="titulo" name="titulo" required placeholder="Digite o título" />
 
       <label for="imagem">URL da Imagem</label>
       <input type="url" id="imagem" name="imagem" required placeholder="https://exemplo.com/imagem.jpg" />
+      <input type="file" name="files" id="files">
 
       <label for="titulo">Categoria</label>
       <input type="text" id="categoria" name="categoria" required placeholder="Digite a categoria" />
