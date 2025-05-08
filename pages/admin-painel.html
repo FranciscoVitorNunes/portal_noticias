@@ -80,6 +80,63 @@ button i {
   animation: fadeIn 0.6s ease;
 }
 
+#noticiasContainer {
+  margin-top: 30px;
+}
+
+.noticia {
+  background-color: #2c3e50;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  animation: fadeInUp 0.8s ease;
+}
+
+.noticia h2 {
+  margin-top: 0;
+  color: #1abc9c;
+}
+
+.noticia-imagem {
+  max-width: 100%;
+  border-radius: 5px;
+  margin: 15px 0;
+}
+
+.noticia-conteudo {
+  line-height: 1.6;
+}
+
+.noticia-acoes {
+  margin-top: 15px;
+}
+
+.noticia-acoes button {
+  background-color: #2980b9;
+  color: #fff;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  margin-right: 10px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  font-size: 14px;
+}
+
+.noticia-acoes button:hover {
+  background-color: #1c5980;
+}
+
+.btn-excluir {
+  background-color: #e74c3c;
+}
+
+.btn-excluir:hover {
+  background-color: #c0392b;
+}
+
+
 /* Animações */
 @keyframes fadeInUp {
   from {
@@ -102,16 +159,22 @@ button i {
 <body>
   <div class="container">
     <h1><i class="fas fa-pen-nib"></i> Criar Nova Notícia</h1>
-    <form id="postForm">
+    <form id="postForm" method="post" action="/admin/cadastrar">
       <label for="titulo">Título da Notícia</label>
       <input type="text" id="titulo" name="titulo" required placeholder="Digite o título" />
 
       <label for="imagem">URL da Imagem</label>
       <input type="url" id="imagem" name="imagem" required placeholder="https://exemplo.com/imagem.jpg" />
 
+      <label for="titulo">Categoria</label>
+      <input type="text" id="categoria" name="categoria" required placeholder="Digite a categoria" />
+
       <label for="conteudo">Conteúdo da Notícia</label>
       <textarea id="conteudo" name="conteudo" required placeholder="Escreva o conteúdo da notícia..."></textarea>
 
+      <label for="titulo">Slug</label>
+      <input type="text" id="slug" name="slug" required placeholder="Digite o slug" />
+      
       <button type="submit">
         <i class="fas fa-paper-plane"></i> Publicar
       </button>
@@ -119,5 +182,21 @@ button i {
     <div id="mensagem"></div>
   </div>
 
+    <div class="container" id="noticiasContainer">
+        <h1><i class="fas fa-newspaper"></i> Notícias Publicadas</h1>
+
+            <% for(let i = 1; i< posts.length; i++){ %>
+            <div class="noticia" id="exemploNoticia">
+                <h2 class="noticia-titulo"><%= posts[i].titulo %></h2>
+                <img class="noticia-imagem" src="<%= posts[i].imagem %>" alt="Imagem da notícia" />
+                <p class="noticia-conteudo"><%- posts[i].conteudo %></p>
+                <div class="noticia-acoes">
+                    <a href="/admin/editar" class="btn-editar"><i class="fas fa-edit"></i> Editar</a>
+                    <a href="/admin/excluir/<%= posts[i].id %>" class="btn-excluir"><i class="fas fa-trash-alt"></i> Excluir</a>
+                </div>
+            </div>
+            <%  }  %>
+  </div>
+  
 </body>
 </html>

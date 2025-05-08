@@ -116,14 +116,58 @@ app.post('/admin/login', (req, res) => {
         return res.send('Login inválido');
     }
 });
+app.post('/admin/cadastrar',(req,res)=>{
+    Posts.create({
+        titulo: req.body.titulo,
+        imagem: req.body.imagem,
+        categoria: req.body.categoria,
+        conteudo: req.body.conteudo,
+        slug: req.body.slug,
+        autor: 'Vitor',
+        views: 0      
+    })
+    res.redirect('/admin/login');
+})
+app.post('/admin/excluir/:id',(req,res)=>{
+    Posts.deleteOne({_id:req.params.id}).then(()=>{
+        res.redirect('/admin/login');
+    })
+})
+app.post('/admin/editar/:id',(req,res)=>{
+    Posts.updateOne({
+        titulo: req.body.titulo,
+        imagem: req.body.imagem,
+        categoria: req.body.categoria,
+        conteudo: req.body.conteudo,
+        slug: req.body.slug,
+    });
+
+})
 
 app.get('/admin/login', async(req,res)=>{
     if(req.session.login== null) {
         res.render('admin-login');
     } 
     else{
-        res.render('admin-painel');
-    }
+        try {
+            const postsDB = await Posts.find({}).sort({ _id: 0 });
+            const posts = postsDB.map(function(val){
+                return {
+                    id: val._id,
+                    titulo: val.titulo,
+                    conteudo: val.conteudo,
+                    descricaoCurta: val.conteudo.substring(0, 10),
+                    imagem: val.imagem,
+                    slug: val.slug,
+                    categoria: val.categoria
+                }
+            });
+            
+            res.render('admin-painel', { posts: posts });
+        } catch (err) {
+            console.log(err);
+            res.status(500).send("Erro ao buscar posts");
+        }    }
 });
 
 app.listen(5000,()=>{
