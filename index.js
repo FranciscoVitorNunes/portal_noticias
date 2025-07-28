@@ -34,10 +34,12 @@ mongoose.connect(uri, clientOptions)
   });
 
   
-app.use(fileupload({
-    useTempFile: true,
-    tempFileDir: path.join(__dirname,'temp')
-}))
+const fileUpload = require('express-fileupload');
+app.use(fileUpload({
+    useTempFiles: true,
+    tempFileDir: '/tmp/'
+}));
+
 app.use( bodyParser.json() );       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
   extended: true
@@ -151,27 +153,51 @@ app.post('/admin/login', (req, res) => {
         return res.send('Login inválido');
     }
 });
-app.post('/admin/cadastrar',(req,res)=>{
+app.post('/admin/cadastrar', (req, res) => {
+    let imagem = '';
+    
+    if (req.files && req.files.files) {
+        let formato = req.files.files.name.split('.');
+        let extensao = formato[formato.length - 1].toLowerCase();
 
-    let formato = req.files.files.name.split('.');
-    var imagem='';
-    if(formato[formato.length -1 ]=='jpg'){
-        imagem=new Date().getTime()+'.jpg'
-        req.files.files.mv(__dirname+'/public/images'+imagem);
-    }else{
-        fs.unlinkSync(req.files.files.tempFilePath);
+        if (extensao === 'jpg') {
+            imagem = new Date().getTime() + '.jpg';
+            const caminho = __dirname + '/public/images/' + imagem;
+
+            req.files.files.mv(caminho, (err) => {
+                if (err) {
+                    console.error('Erro ao mover o arquivo:', err);
+                    return res.status(500).send('Erro no upload da imagem.');
+                }
+
+                salvarPost();
+            });
+        } else {
+            fs.unlinkSync(req.files.files.tempFilePath); // exclui arquivos que não são jpg
+            return res.status(400).send('Formato de imagem inválido. Use JPG.');
+        }
+    } else {
+        return res.status(400).send('Nenhum arquivo foi enviado.');
     }
-    Posts.create({
-        titulo: req.body.titulo,
-        imagem: 'http://localhost:5000/public/images'+imagem,
-        categoria: req.body.categoria,
-        conteudo: req.body.conteudo,
-        slug: req.body.slug,
-        autor: 'Vitor',
-        views: 0      
-    })
-    res.redirect('/admin/login');
-})
+
+    function salvarPost() {
+        Posts.create({
+            titulo: req.body.titulo,
+            imagem: 'http://localhost:5000/public/images/' + imagem,
+            categoria: req.body.categoria,
+            conteudo: req.body.conteudo,
+            slug: req.body.slug,
+            autor: 'Vitor',
+            views: 0
+        }).then(() => {
+            res.redirect('/admin/login');
+        }).catch(err => {
+            console.error('Erro ao salvar no banco:', err);
+            res.status(500).send('Erro ao salvar notícia.');
+        });
+    }
+});
+
 app.get('/admin/excluir/:id',(req,res)=>{
     Posts.deleteOne({_id:req.params.id}).then(()=>{
         res.redirect('/admin/login');
