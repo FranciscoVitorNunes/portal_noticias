@@ -11,11 +11,29 @@ const session = require('express-session')
 
 const Posts = require('./Posts.js');
 
-mongoose.connect('mongodb+srv://franvinu:Vito5757!@cluster0.nk6o00b.mongodb.net/portal_news?retryWrites=true&w=majority&appName=Cluster0', {useNewUrlParser: true, useUnifiedTopology: true}).then(function(){
-    console.log('Conectado com  sucesso');
-}).catch(function(err){
-    console.log("falha na conexão!!!");
-})
+// URL de conexão com seu cluster (substitua <db_password> pela senha real)
+const uri = "mongodb+srv://franvinu:Vito5757!@cluster0.nk6o00b.mongodb.net/portal_news?retryWrites=true&w=majority&appName=Cluster0";
+
+// Opções da API estável
+const clientOptions = {
+  serverApi: {
+    version: '1',
+    strict: true,
+    deprecationErrors: true,
+  },
+};
+
+mongoose.connect(uri, clientOptions)
+  .then(() => {
+    console.log('✅ Conectado ao MongoDB com sucesso!');
+    
+    
+  })
+  .catch((err) => {
+    console.error('❌ Erro ao conectar no MongoDB:', err);
+  });
+
+  
 app.use(fileupload({
     useTempFile: true,
     tempFileDir: path.join(__dirname,'temp')
@@ -89,6 +107,11 @@ app.get('/:slug', async (req, res) => {
             { new: true }
         );
 
+        if (!resposta) {
+            return res.status(404).send("Notícia não encontrada"); 
+            // ou: return res.render('404');
+        }
+
         const postsTopList = await Posts.find({}).sort({ 'views': -1 }).limit(3);
         const postsTop = postsTopList.map(function(val){
             return {
@@ -103,12 +126,16 @@ app.get('/:slug', async (req, res) => {
         });
 
         res.render('single', {
-            noticia: resposta, postsTop: postsTop
+            noticia: resposta,
+            postsTop: postsTop
         });
+
     } catch (err) {
+        console.error("Erro na rota /:slug:", err);
         res.redirect('/');
     }
 });
+
 
 const usuarios = [
     { usuario: "vitor", senha: "1" }
