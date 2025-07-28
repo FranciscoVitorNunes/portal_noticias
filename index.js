@@ -14,7 +14,7 @@ const Posts = require('./Posts.js');
 mongoose.connect('mongodb+srv://franvinu:Vito5757!@cluster0.nk6o00b.mongodb.net/portal_news?retryWrites=true&w=majority&appName=Cluster0', {useNewUrlParser: true, useUnifiedTopology: true}).then(function(){
     console.log('Conectado com  sucesso');
 }).catch(function(err){
-    console.log("fala na conexão!!!");
+    console.log("falha na conexão!!!");
 })
 app.use(fileupload({
     useTempFile: true,
@@ -25,11 +25,16 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
   extended: true
 })); 
 
+
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 app.use('/public', express.static(path.join(__dirname, 'public')));
 app.set('views', path.join(__dirname, '/pages'));
-app.use(session({secret:'dg236d623d63',cookie:{mxAge:60000}}));
+app.use(session({
+    secret: 'dg236d623d63',
+    resave: false,
+    saveUninitialized: true
+}));
 
 app.get('/', async (req, res) => {
     if (!req.query.busca) {
