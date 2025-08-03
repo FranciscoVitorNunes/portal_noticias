@@ -97,4 +97,4 @@ node server.js
 
 ---
 
-Desenvolvido por [Seu Nome] 💻🚀
+Desenvolvido por Francisco Vitor.
