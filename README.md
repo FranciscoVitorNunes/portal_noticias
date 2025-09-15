@@ -67,7 +67,7 @@ Usuário e senha são fixos no código:
 
 1. Clone o repositório:
 ```bash
-git clone https://github.com/seuusuario/portal-noticias.git
+git clone https://github.com/FranciscoVitorNunes/portal-noticias.git
 cd portal-noticias
 ```
 
